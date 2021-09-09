@@ -14,7 +14,7 @@ Você, como Analista de Infraestrutura, deverá entregar de forma automatizada a
 * A infraestrutura deverá ser provisionada em um cloud provider utilizando uma ferramenta de gerenciamento de infraestrutura como código(utilize uma conta gratuita);
 * Deverá ser realizado o deploy da ferramenta GitLab(https://about.gitlab.com/) em um docker container utilizando um gestor de configuração de sua preferência;
 * No GitLab, desenvolva uma pipeline que execute todo o código desenvolvido, ou seja, provisione uma instância no cloud provider escolhido e faça o deploy do GitLab no novo ambiente disponibilizado;
-* **Extra** Adicione um stage a sua pipeline para testes e validação que voce julgue necessário para o codigo desenvolvido de provisionamento e deploy da ferramenta a fim de garantir o funcionamento.
+* **Extra** Adicione um stage a sua pipeline para testes e validação que você julgue necessário para o código desenvolvido de provisionamento e deploy da ferramenta a fim de garantir o funcionamento.
 
 ## Requisitos
 
