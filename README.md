@@ -4,15 +4,15 @@
 
 Este projeto faz parte do processo seletivo para o cargo de Analista de Infraestrutura de Hosting Linux da KingHost.
 
-Este desafio foi projetado a fim de medir seu nível de conhecimento com conceitos e tecnologias de mercado focados em IaC(Infra as code), gestão de configuração, containerização e desenvolvimento de pipelines visando a garantia de entrega de um produto. Além disto, avaliaremos padrões adotados bem como a suas capacidades de propor soluções para as demandas apresentades, sempre com o foco de manter os ambientes resilientes e padronizados.
+Este desafio foi projetado a fim de medir seu nível de conhecimento com conceitos e tecnologias de mercado focados em IaaC (Infra as code), gestão de configuração, containerização e desenvolvimento de pipelines visando a garantia de entrega de um produto. Além disto, avaliaremos padrões adotados bem como a suas capacidades de propor soluções para as demandas apresentades, sempre com o foco de manter os ambientes resilientes e padronizados.
 
 
 ## O desafio
 
 Você, como Analista de Infraestrutura, deverá entregar de forma automatizada a seguinte infraestrutura:
 
-* A infraestrutura deverá ser provisionada em um cloud provider utilizando uma ferramenta de gerenciamento de infraestrutura como código(utilize uma conta gratuita);
-* Deverá ser realizado o deploy da ferramenta GitLab(https://about.gitlab.com/) em um docker container utilizando um gestor de configuração de sua preferência;
+* A infraestrutura deverá ser provisionada em um cloud provider utilizando uma ferramenta de gerenciamento de infraestrutura como código (utilize uma conta gratuita);
+* Deverá ser realizado o deploy da ferramenta GitLab (https://about.gitlab.com/) em um docker container utilizando um gestor de configuração de sua preferência;
 * No GitLab, desenvolva uma pipeline que execute todo o código desenvolvido, ou seja, provisione uma instância no cloud provider escolhido e faça o deploy do GitLab no novo ambiente disponibilizado;
 * **Extra** Adicione um stage a sua pipeline para testes e validação que você julgue necessário para o código desenvolvido de provisionamento e deploy da ferramenta a fim de garantir o funcionamento.
 
@@ -43,7 +43,7 @@ Para ajudá-lo em sua jornada, abaixo segue algumas palavras-chave para lhe auxi
 * Continuous Integration
 * Continuous Deployment
 
-Você tem alguma dúvida? Você pode enviar um e-mail para XXXX@kinghost.com.br a qualquer momento, que iremos o mais breve possível retorná-lo. ;)
+Você tem alguma dúvida? Você pode enviar um e-mail para felipe.avila@kinghost.com.br e cassolli@kinghost.com.br a qualquer momento, que iremos o mais breve possível retorná-lo. ;)
 
 ## Entregáveis
 
@@ -57,7 +57,7 @@ Ao final do desafio, você deverá realizar um "pull request" neste repositório
 
 **IMPORTANTE: Mesmo que você não consiga concluir o desafio por completo, envie o que você conseguiu fazer!** Iremos avaliar todo e qualquer desenvolvimento que você nos apresentar! O mais importante deste desafio é, que ao final dele, você adquira novos conhecimentos ou aprimore os que você já possui. ;)
 
-Após, envie e-mail para o e-mail XXXXX@kinghost.com.br, com cópia para XXXXXX@kinghost.com.br e XXXXX@kinghost.com.br, com o assunto **"Desafio Prático Infraestrutura Linux"**, sinalizando a entrega do desafio para avaliação.
+Após, envie e-mail para o e-mail gabriel.soares@kinghost.com.br, com cópia para felipe.avila@kinghost.com.br e cassolli@kinghost.com.br, com o assunto **"Desafio Prático Infraestrutura Linux"**, sinalizando a entrega do desafio para avaliação.
 
 ## Prazo para conclusão
 
