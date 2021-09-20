@@ -1,0 +1,97 @@
+---
+
+- name: Gitlab install
+  hosts: prod
+  become: true
+
+  tasks:  
+
+  - name: Prepare for docker use
+    block:
+
+    - name: Add repository
+      shell:
+        cmd: yum install -y yum-utils && yum-config-manager --add-repo 'https://download.docker.com/linux/centos/docker-ce.repo'
+        executable: /bin/bash
+        warn: false
+    
+    - name: Install needed packages through yum
+      shell:
+        cmd: yum install -y docker-ce docker-ce-cli containerd.io docker-compose libselinux-python libselinux-python3
+        executable: /bin/bash
+        warn: false
+
+    - name: Install docker SDK for python, needed by ansible
+      pip:
+        name: 
+          - docker
+        executable: pip3
+    
+    - name: Enable and start docker
+      service:
+        name: docker
+        enabled: yes
+        masked: no
+        state: started
+
+  - name: Prepare gitlab storage
+    block:
+#    - name: Creates partition table into storage device
+#      parted:
+#        device: /dev/sdg
+#        label: gpt
+#        number: 1
+#        state: present
+    
+    - name: Creates the filesystem into storage device
+      filesystem:
+        fstype: ext4
+        dev: /dev/disk/by-id/google-gitlab_storage
+
+    - name: Create gitlab root folder
+      shell:
+        cmd: mkdir -p /gitlab/
+        executable: /bin/bash
+
+
+  - name: Prepare gitlab env
+    block:
+
+    - name: Mount Gitlab storage device
+      mount:
+        path: /gitlab
+        src: /dev/disk/by-id/google-gitlab_storage
+        fstype: ext4
+        state: mounted
+
+    - name: Create gitlab folders in the volume
+      shell:
+        cmd: mkdir -p /gitlab/config /gitlab/logs /gitlab/data
+        executable: /bin/bash
+
+    - name: Define gitlab env variable
+      lineinfile:
+        path: /root/.bashrc
+        line: export GITLAB_HOME=/gitlab
+    
+    - name: Copy docker-compose file into the machine
+      copy:
+        src: files/docker-compose.yml
+        dest: /gitlab
+        owner: root
+        group: root
+        mode: '0644'
+        backup: yes
+
+  - name: Stop/start container
+    block:
+    
+    - name: Destroy existing container
+      docker_compose:
+        project_src: /gitlab
+        state: absent
+
+    - name: Create and start container
+      docker_compose:
+        project_src: /gitlab
+        state: present

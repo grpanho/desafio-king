@@ -24,7 +24,7 @@ resource "google_compute_instance" "gitlab" {
     }
   }
 
-  metadata_startup_script = ""
+  metadata_startup_script = "yum update -y && yum install python3 -y; sed -i 's/enforcing/permissive/g' /etc/selinux/config && reboot"
 
   network_interface {
     network = "default"
@@ -44,6 +44,7 @@ resource "google_compute_attached_disk" "att_gitlab_disk" {
   device_name = "gitlab_storage"
   disk        = google_compute_disk.storage_gitlab.id
   instance    = google_compute_instance.gitlab.id
+  mode        = "READ_WRITE"
 }
 
 output "ip" {
