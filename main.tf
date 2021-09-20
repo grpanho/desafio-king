@@ -29,12 +29,23 @@ resource "google_compute_instance" "gitlab" {
   network_interface {
     network = "default"
 
-    access_config {// Grant an external ip address
-    
-    }
+    access_config {} // Grant an external ip address
   }
-
-  output "ip" {
-  value = google_compute_instance.gitlab.network_interface.0.network_ip
 }
+
+resource "google_compute_disk" "storage_gitlab" {
+  name = "gitlab-disk"
+  type = "pd-balanced"
+  zone = "us-west1-a"
+  size = 25
+}
+
+resource "google_compute_attached_disk" "att_gitlab_disk" {
+  device_name = "gitlab_storage"
+  disk        = google_compute_disk.storage_gitlab.id
+  instance    = google_compute_instance.gitlab.id
+}
+
+output "ip" {
+  value = google_compute_instance.gitlab.network_interface.0.access_config.0.nat_ip
 }
