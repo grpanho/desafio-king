@@ -28,10 +28,10 @@ resource "aws_instance" "gitlab" {
 }
 
 resource "aws_ebs_volume" "gitlab_storage" {
-  availability_zone     = "sa-east-1a"
-  size                  = 15
-  iops                  = 2500
-  type                  = "gp3"
+  availability_zone = "sa-east-1a"
+  size              = 15
+  iops              = 2500
+  type              = "gp3"
 
   tags = {
     Name = "storage-gitlab"

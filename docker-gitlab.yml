@@ -1,0 +1,54 @@
+---
+
+- name: Gitlab install
+  hosts: prod
+  become: true
+
+  tasks:  
+  
+  - name: Install docker packages # already in aws repo
+    yum:
+      name: 
+        - docker
+      state: present
+  
+  - name: Enable and start docker
+    service:
+      name: docker
+      enabled: yes
+      masked: no
+      state: started
+
+  - name: Creates the filesystem into storage device
+    filesystem:
+      fstype: ext4
+      dev: /dev/sdg
+
+  - name: Mount Gitlab storage device
+    mount:
+      path: /gitlab
+      src: /dev/sdg
+      fstype: ext4
+      state: mounted
+
+  - name: Prepare gitlab env
+    block:
+
+    - name: Create gitlab root folder
+      shell:
+        cmd: mkdir -p /gitlab/
+        executable: /bin/bash
+
+    - name: Define gitlab env variable
+      lineinfile:
+        path: /root/.bashrc
+        line: export GITLAB_HOME=gitlab
+
+  - name: Copy docker-compose file into the machine
+    copy:
+      src: files/docker-compose.yml
+      dest: /gitlab
+      owner: root
+      group: root
+      mode: '0644'
+      backup: yes
