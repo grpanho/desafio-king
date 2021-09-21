@@ -1,10 +1,10 @@
 web:
   image: 'gitlab/gitlab-ee:latest'
   restart: always
-  hostname: 'gitlab.example.com'
+  hostname: 'gitlab.panho.net'
   environment:
     GITLAB_OMNIBUS_CONFIG: |
-      external_url 'https://35.230.125.52'
+      external_url 'https://gitlab.panho.net'
   ports:
     - '80:80'
     - '443:443'

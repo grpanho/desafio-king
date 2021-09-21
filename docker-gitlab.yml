@@ -41,13 +41,7 @@
 
   - name: Prepare gitlab storage
     block:
-#    - name: Creates partition table into storage device
-#      parted:
-#        device: /dev/sdg
-#        label: gpt
-#        number: 1
-#        state: present
-    
+        
     - name: Creates the filesystem into storage device
       filesystem:
         fstype: ext4
@@ -95,8 +89,18 @@
       docker_compose:
         project_src: /gitlab
         state: absent
+        remove_volumes: no
 
     - name: Create and start container
       docker_compose:
         project_src: /gitlab
         state: present
+  
+  - name: Get initial root password
+    shell: 
+      cmd: docker exec -it $(docker ps -aq) grep 'Password:' /etc/gitlab/initial_root_password
+      executable: /bin/bash
+    register: command_output
+
+  - debug:
+          var: command_output.stdout_lines

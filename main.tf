@@ -32,7 +32,7 @@ resource "google_compute_instance" "gitlab" {
     access_config {} // Grant an external ip address
   }
 
-  tags = [ "gitlab" ]
+  tags = ["gitlab"]
 }
 
 resource "google_compute_disk" "storage_gitlab" {
@@ -40,6 +40,10 @@ resource "google_compute_disk" "storage_gitlab" {
   type = "pd-balanced"
   zone = "us-west1-a"
   size = 25
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "google_compute_attached_disk" "att_gitlab_disk" {
