@@ -24,13 +24,15 @@ resource "google_compute_instance" "gitlab" {
     }
   }
 
-  metadata_startup_script = "yum update -y && yum install python3 -y; sed -i 's/enforcing/permissive/g' /etc/selinux/config && reboot"
+  metadata_startup_script = "yum update -y && yum install python3 -y; setenforce 0"
 
   network_interface {
     network = "default"
 
     access_config {} // Grant an external ip address
   }
+
+  tags = [ "gitlab" ]
 }
 
 resource "google_compute_disk" "storage_gitlab" {
@@ -45,6 +47,19 @@ resource "google_compute_attached_disk" "att_gitlab_disk" {
   disk        = google_compute_disk.storage_gitlab.id
   instance    = google_compute_instance.gitlab.id
   mode        = "READ_WRITE"
+}
+
+resource "google_compute_firewall" "gitlab_fw" {
+  name    = "allow-gitlab-access"
+  network = "default"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80", "443", "22", "2222"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["gitlab"]
 }
 
 output "ip" {

@@ -9,6 +9,11 @@
   - name: Prepare for docker use
     block:
 
+    - name: Disable selinux
+      shell:
+        cmd: sed -i 's/enforcing/disabled/g' /etc/selinux/config
+        executable: /bin/bash    
+
     - name: Add repository
       shell:
         cmd: yum install -y yum-utils && yum-config-manager --add-repo 'https://download.docker.com/linux/centos/docker-ce.repo'
