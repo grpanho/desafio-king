@@ -113,3 +113,18 @@
       shell:
         cmd: docker run -d --name gitlab-runner --restart always --env TZ='America/Sao_Paulo' -v /gitlab/runner/config:/etc/gitlab-runner -v /var/run/docker.sock:/var/run/docker.sock gitlab/gitlab-runner:latest
         executable: /bin/bash
+
+    - name: Copy terraform install script into docker volume
+      copy:
+        src: files/install-pipeline-req.sh
+        dest: /gitlab/runner/config
+        owner: root
+        group: root
+        mode: '0744'
+        backup: yes
+
+    - name: Install pipeline requirements
+      shell: 
+        cmd: docker exec gitlab-runner /etc/gitlab-runner/install-pipeline-req.sh
+        executable: /bin/bash
+      
