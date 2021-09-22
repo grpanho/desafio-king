@@ -1,7 +1,7 @@
 ---
 
 - name: Gitlab install
-  hosts: prod
+  hosts: all:!localhost
   become: true
 
   tasks:  
@@ -65,13 +65,8 @@
 
     - name: Create gitlab folders in the volume
       shell:
-        cmd: mkdir -p /gitlab/config /gitlab/logs /gitlab/data
+        cmd: mkdir -p /gitlab/config /gitlab/logs /gitlab/data /gitlab/runner/config
         executable: /bin/bash
-
-    - name: Define gitlab env variable
-      lineinfile:
-        path: /root/.bashrc
-        line: export GITLAB_HOME=/gitlab
     
     - name: Copy docker-compose file into the machine
       copy:
@@ -85,22 +80,36 @@
   - name: Stop/start container
     block:
     
-    - name: Destroy existing container
+    - name: Destroy existing gitlab container
       docker_compose:
         project_src: /gitlab
         state: absent
         remove_volumes: no
 
-    - name: Create and start container
+    - name: Start gitlab
       docker_compose:
         project_src: /gitlab
         state: present
-  
-  - name: Get initial root password
-    shell: 
-      cmd: docker exec -it $(docker ps -aq) grep 'Password:' /etc/gitlab/initial_root_password
-      executable: /bin/bash
-    register: command_output
 
-  - debug:
-          var: command_output.stdout_lines
+    - name: Wait for gitlab initial conf
+      wait_for:
+        path: /gitlab/config/initial_root_password
+    
+    - name: Get gitlab initial root password
+      shell: 
+        cmd: docker exec gitlab_web_1 grep 'Password:' /etc/gitlab/initial_root_password
+        executable: /bin/bash
+      register: command_output
+
+    - debug:
+        var: command_output.stdout_lines
+    
+    - name: Destroy gitlab runner
+      docker_container:
+        name: gitlab-runner
+        state: absent
+    
+    - name: Start gitlab runner
+      shell:
+        cmd: docker run -d --name gitlab-runner --restart always --env TZ='America/Sao_Paulo' -v /gitlab/runner/config:/etc/gitlab-runner -v /var/run/docker.sock:/var/run/docker.sock gitlab/gitlab-runner:latest
+        executable: /bin/bash
