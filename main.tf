@@ -24,7 +24,7 @@ resource "google_compute_instance" "gitlab" {
     }
   }
 
-  metadata_startup_script = "yum update -y && yum install python3 -y; setenforce 0"
+  metadata_startup_script = "yum install python3 -y; yum update -y; setenforce 0"
 
   network_interface {
     network = "default"
@@ -36,13 +36,13 @@ resource "google_compute_instance" "gitlab" {
 }
 
 resource "google_compute_disk" "storage_gitlab" {
-  name = "gitlab-disk"
+  name = "gitlab-disk-${random_id.instance_id.hex}"
   type = "pd-balanced"
   zone = "us-west1-a"
   size = 25
 
   lifecycle {
-    prevent_destroy = true
+   # prevent_destroy = true
   }
 }
 
@@ -54,7 +54,7 @@ resource "google_compute_attached_disk" "att_gitlab_disk" {
 }
 
 resource "google_compute_firewall" "gitlab_fw" {
-  name    = "allow-gitlab-access"
+  name    = "allow-gitlab-access-${random_id.instance_id.hex}"
   network = "default"
 
   allow {
@@ -68,4 +68,11 @@ resource "google_compute_firewall" "gitlab_fw" {
 
 output "ip" {
   value = google_compute_instance.gitlab.network_interface.0.access_config.0.nat_ip
+}
+
+resource "null_resource" "ansible-run" {
+
+  provisioner "local-exec" {
+    command = "echo '${google_compute_instance.gitlab.network_interface.0.access_config.0.nat_ip}' > .ansible-host"
+  }
 }

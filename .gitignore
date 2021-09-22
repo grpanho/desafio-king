@@ -2,3 +2,4 @@ credentials.json
 .terraform.lock.hcl
 .terraform/
 terraform.tfstate*
+.ansible-host

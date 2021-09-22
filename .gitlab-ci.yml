@@ -1,0 +1,28 @@
+stages:
+  - init
+  - validate
+  - build
+  - deploy
+
+init:
+  script:
+    - terraform init
+    - terraform fmt
+
+
+validate:
+  script:
+    - terraform validate
+    - ansible-playbook -u gabriel_panho -i .ansible-hosts --syntax-check docker-gitlab.yml
+
+build:
+  dependencies:
+    - init
+  script:
+    - terraform apply --auto-approve
+
+deploy:
+  dependencies:
+    - build
+  script:
+    - ansible-playbook -u gabriel_panho -i .ansible-hosts docker-gitlab.yml

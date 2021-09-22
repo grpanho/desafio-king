@@ -5,15 +5,15 @@
   become: true
   vars_prompt:
 
-  - name: gitlab_url
+  - name: url
     prompt: Enter gitlab url
     private: no
     
-  - name: gitlab_registration_token
+  - name: token
     prompt: Enter gitlab registration token
     private: no
 
-  - name: gitlab_runner_name
+  - name: name
     prompt: Enter gitlab runner name
     private: no    
 
@@ -22,7 +22,7 @@
   - name: Register runner
     shell: docker exec gitlab-runner gitlab-runner register \
            --non-interactive \
-           --name {{gitlab_runner_name}} \
-           --url {{ gitlab_url }} \
-           --registration-token {{ gitlab_registration_token }} \
+           --name {{name}} \
+           --url {{ url }} \
+           --registration-token {{ token }} \
            --executor shell
