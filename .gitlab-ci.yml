@@ -3,6 +3,7 @@ variables:
   GIT_STRATEGY: clone
   ANSIBLE_HOST_KEY_CHECKING: 'False'
   ANSIBLE_PYTHON_INTERPRETER: /usr/bin/python3
+  GCP_USER: gabriel_panho
 
 stages:
   - init
@@ -35,7 +36,7 @@ build-infrastructure:
 validate-ansible:
   stage: validate
   script:
-    - ansible-playbook -u gabriel_panho -i .ansible-host --syntax-check docker-gitlab.yml
+    - ansible-playbook -u $GCP_USER -i .ansible-host --syntax-check docker-gitlab.yml
 
 configure-instances:
   stage: deploy
@@ -43,4 +44,4 @@ configure-instances:
     - build-infrastructure
   script:
     - sleep 30
-    - ansible-playbook -u gabriel_panho -i .ansible-host docker-gitlab.yml
+    - ansible-playbook -u $GCP_USER -i .ansible-host docker-gitlab.yml

@@ -130,11 +130,13 @@
         owner: root
         group: root
         mode: '0740'
+      ignore_errors: yes
     
     - name: Adjust credentials.json group
       shell: 
         cmd: docker exec gitlab-runner chown root:gitlab-runner /etc/gitlab-runner/credentials.json
         executable: /bin/bash
+      ignore_errors: yes
 
     - name: Install pipeline requirements
       shell: 
