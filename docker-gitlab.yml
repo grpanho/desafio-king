@@ -123,6 +123,19 @@
         mode: '0744'
         backup: yes
 
+    - name: Copy credentials into runner
+      copy:
+        src: credentials.json
+        dest: /gitlab/runner/config
+        owner: root
+        group: root
+        mode: '0740'
+    
+    - name: Adjust credentials.json group
+      shell: 
+        cmd: docker exec gitlab-runner chown root:gitlab-runner /etc/gitlab-runner/credentials.json
+        executable: /bin/bash
+
     - name: Install pipeline requirements
       shell: 
         cmd: docker exec gitlab-runner /etc/gitlab-runner/install-pipeline-req.sh

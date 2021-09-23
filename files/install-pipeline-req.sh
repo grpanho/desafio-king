@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-apt update && apt install -y python3 ansible wget unzip
+apt install -y python3 ansible wget unzip
 
 pip3 install docker
 

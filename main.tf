@@ -42,7 +42,7 @@ resource "google_compute_disk" "storage_gitlab" {
   size = 25
 
   lifecycle {
-   # prevent_destroy = true
+    prevent_destroy = true
   }
 }
 

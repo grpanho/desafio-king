@@ -1,33 +1,46 @@
+variables:
+  GIT_CLEAN_FLAGS: none
+  GIT_STRATEGY: clone
+  ANSIBLE_HOST_KEY_CHECKING: 'False'
+  ANSIBLE_PYTHON_INTERPRETER: /usr/bin/python3
+
 stages:
   - init
   - validate
   - build
   - deploy
 
-init-terraform:  
+init-terraform:
   stage: init
   script:
+    - sed -i 's/credentials.json/\/etc\/gitlab-runner\/credentials.json/g' main.tf
+    - mkdir -p /home/$USER/.ssh; if [[ ! -e /home/$USER/.ssh/id_rsa.pub ]]; then ssh-keygen -f "/home/$USER/.ssh/id_rsa" -N ""; fi
     - terraform init
-    - terraform fmt
-
-validate-files:
-  stage: validate
-  dependencies:
-    - init-terraform
-  script:
     - terraform validate
-    - ansible-playbook -u gabriel_panho -i .ansible-hosts --syntax-check docker-gitlab.yml
+    - terraform fmt
 
 build-infrastructure:
   stage: build
   dependencies:
     - init-terraform
   script:
-    - terraform apply --auto-approve
+    - sed -i 's/credentials.json/\/etc\/gitlab-runner\/credentials.json/g' main.tf
+    - mkdir -p /home/$USER/.ssh; if [[ ! -e /home/$USER/.ssh/id_rsa ]]; then ssh-keygen -f "/home/$USER/.ssh/id_rsa" -N ""; fi
+    - terraform init && terraform apply --auto-approve
+  artifacts:
+    untracked: true
+    paths:
+      - ./.ansible.host
+
+validate-ansible:
+  stage: validate
+  script:
+    - ansible-playbook -u gabriel_panho -i .ansible-host --syntax-check docker-gitlab.yml
 
 configure-instances:
   stage: deploy
   dependencies:
     - build-infrastructure
   script:
-    - ansible-playbook -u gabriel_panho -i .ansible-hosts docker-gitlab.yml
+    - sleep 30
+    - ansible-playbook -u gabriel_panho -i .ansible-host docker-gitlab.yml
