@@ -12,6 +12,8 @@ init-terraform:
 
 validate-files:
   stage: validate
+  dependencies:
+    - init-terraform
   script:
     - terraform validate
     - ansible-playbook -u gabriel_panho -i .ansible-hosts --syntax-check docker-gitlab.yml
@@ -19,13 +21,13 @@ validate-files:
 build-infrastructure:
   stage: build
   dependencies:
-    - init
+    - init-terraform
   script:
     - terraform apply --auto-approve
 
 configure-instances:
   stage: deploy
   dependencies:
-    - build
+    - build-infrastructure
   script:
     - ansible-playbook -u gabriel_panho -i .ansible-hosts docker-gitlab.yml

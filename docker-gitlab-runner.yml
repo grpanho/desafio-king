@@ -22,7 +22,8 @@
   - name: Register runner
     shell: docker exec gitlab-runner gitlab-runner register \
            --non-interactive \
-           --name {{name}} \
-           --url {{ url }} \
-           --registration-token {{ token }} \
+           --name "{{name}}" \
+           --url "{{ url }}" \
+           --registration-token "{{ token }}" \
+           --clone-url "{{ url }}" \
            --executor shell
